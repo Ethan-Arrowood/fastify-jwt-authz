@@ -1,0 +1,34 @@
+{
+  "name": "fastify-jwt-authz",
+  "version": "0.0.1",
+  "description": "Validate the JWT scope to authorize access to an endpoint for fastify",
+  "main": "fastify-jwt-authz.js",
+  "scripts": {
+    "test": "tap test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Ethan-Arrowood/fastify-jwt-authz.git"
+  },
+  "keywords": [
+    "fastify",
+    "jwt",
+    "authentication",
+    "auth0",
+    "nodejs"
+  ],
+  "author": "Ethan Arrowood",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ethan-Arrowood/fastify-jwt-authz/issues"
+  },
+  "homepage": "https://github.com/Ethan-Arrowood/fastify-jwt-authz#readme",
+  "dependencies": {
+    "fastify-plugin": "^0.2.1"
+  },
+  "devDependencies": {
+    "fastify": "^0.39.1",
+    "request": "^2.83.0",
+    "tap": "^11.0.1"
+  }
+}
