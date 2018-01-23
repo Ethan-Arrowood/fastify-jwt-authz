@@ -11,7 +11,7 @@ test('should decorate request instance with jwtAuthz method', function (t) {
   fastify.register(jwtAuthz)
 
   fastify.get('/test', function (request, reply) {
-    t.ok(request.jwtAuthz)    
+    t.ok(request.jwtAuthz)
     reply.send({ foo: 'bar' })
   })
   fastify.listen(0, function (err) {
@@ -28,14 +28,14 @@ test('should decorate request instance with jwtAuthz method', function (t) {
   })
 })
 
-test('should throw an error \"Scopes cannot be empty\" with an empty scopes parameter', function (t) {
+test('should throw an error "Scopes cannot be empty" with an empty scopes parameter', function (t) {
   t.plan(4)
   var fastify = Fastify()
   fastify.register(jwtAuthz)
 
   fastify.get('/test2', function (request, reply) {
     request.jwtAuthz([])
-      .catch(err => t.match(err.message, 'Scopes cannot be empty') )
+      .catch(err => t.match(err.message, 'Scopes cannot be empty'))
     reply.send({ foo: 'bar' })
   })
   fastify.listen(0, function (err) {
@@ -52,15 +52,14 @@ test('should throw an error \"Scopes cannot be empty\" with an empty scopes para
   })
 })
 
-test('should throw an error \"request.user does not exist\" non existing request.user', function (t) {
+test('should throw an error "request.user does not exist" non existing request.user', function (t) {
   t.plan(4)
   var fastify = Fastify()
   fastify.register(jwtAuthz)
 
   fastify.get('/test3', function (request, reply) {
-
     request.jwtAuthz('baz')
-      .catch(err => t.match(err.message, 'request.user does not exist') )
+      .catch(err => t.match(err.message, 'request.user does not exist'))
     reply.send({ foo: 'bar' })
   })
   fastify.listen(0, function (err) {
@@ -77,20 +76,19 @@ test('should throw an error \"request.user does not exist\" non existing request
   })
 })
 
-test('should throw an error \"request.user.scope must be a string\"', function (t) {
+test('should throw an error "request.user.scope must be a string"', function (t) {
   t.plan(4)
   var fastify = Fastify()
   fastify.register(jwtAuthz)
 
   fastify.get('/test4', function (request, reply) {
-
     request.user = {
       name: 'sample',
       scope: 123
     }
 
     request.jwtAuthz('baz')
-      .catch(err => t.match(err.message, 'request.user.scope must be a string') )
+      .catch(err => t.match(err.message, 'request.user.scope must be a string'))
     reply.send({ foo: 'bar' })
   })
   fastify.listen(0, function (err) {
@@ -107,20 +105,19 @@ test('should throw an error \"request.user.scope must be a string\"', function (
   })
 })
 
-test('should throw an error \"Insufficient scope\"', function (t) {
+test('should throw an error "Insufficient scope"', function (t) {
   t.plan(4)
   var fastify = Fastify()
   fastify.register(jwtAuthz)
 
   fastify.get('/test5', function (request, reply) {
-
     request.user = {
       name: 'sample',
       scope: 'baz'
     }
 
     request.jwtAuthz(['foo'])
-      .catch(err => t.match(err.message, 'Insufficient scope') )
+      .catch(err => t.match(err.message, 'Insufficient scope'))
 
     reply.send({ foo: 'bar' })
   })
@@ -144,7 +141,6 @@ test('should verify user scope', function (t) {
   fastify.register(jwtAuthz)
 
   fastify.get('/test5', function (request, reply) {
-
     request.user = {
       name: 'sample',
       scope: 'user manager'

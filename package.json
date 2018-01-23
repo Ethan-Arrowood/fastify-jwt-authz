@@ -4,7 +4,7 @@
   "description": "Validate the JWT scope to authorize access to an endpoint for fastify",
   "main": "fastify-jwt-authz.js",
   "scripts": {
-    "test": "tap test.js"
+    "test": "standard && tap test.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
   "devDependencies": {
     "fastify": "^0.39.1",
     "request": "^2.83.0",
+    "standard": "^10.0.3",
     "tap": "^11.0.1"
   }
 }
