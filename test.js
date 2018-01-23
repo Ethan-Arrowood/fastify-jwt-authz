@@ -138,7 +138,7 @@ test('should throw an error \"Insufficient scope\"', function (t) {
   })
 })
 
-test('Happy path', function (t) {
+test('should verify user scope', function (t) {
   t.plan(3)
   var fastify = Fastify()
   fastify.register(jwtAuthz)
