@@ -51,3 +51,119 @@ test('should throw an error \"Scopes cannot be empty\" with an empty scopes para
     })
   })
 })
+
+test('should throw an error \"request.user does not exist\" non existing request.user', function (t) {
+  t.plan(4)
+  var fastify = Fastify()
+  fastify.register(jwtAuthz)
+
+  fastify.get('/test3', function (request, reply) {
+
+    request.jwtAuthz('baz')
+      .catch(err => t.match(err.message, 'request.user does not exist') )
+    reply.send({ foo: 'bar' })
+  })
+  fastify.listen(0, function (err) {
+    fastify.server.unref()
+    t.error(err)
+    request({
+      method: 'GET',
+      uri: 'http://localhost:' + fastify.server.address().port + '/test3',
+      json: true
+    }, function (err, response) {
+      t.error(err)
+      t.ok(response)
+    })
+  })
+})
+
+test('should throw an error \"request.user.scope must be a string\"', function (t) {
+  t.plan(4)
+  var fastify = Fastify()
+  fastify.register(jwtAuthz)
+
+  fastify.get('/test4', function (request, reply) {
+
+    request.user = {
+      name: 'sample',
+      scope: 123
+    }
+
+    request.jwtAuthz('baz')
+      .catch(err => t.match(err.message, 'request.user.scope must be a string') )
+    reply.send({ foo: 'bar' })
+  })
+  fastify.listen(0, function (err) {
+    fastify.server.unref()
+    t.error(err)
+    request({
+      method: 'GET',
+      uri: 'http://localhost:' + fastify.server.address().port + '/test4',
+      json: true
+    }, function (err, response) {
+      t.error(err)
+      t.ok(response)
+    })
+  })
+})
+
+test('should throw an error \"Insufficient scope\"', function (t) {
+  t.plan(4)
+  var fastify = Fastify()
+  fastify.register(jwtAuthz)
+
+  fastify.get('/test5', function (request, reply) {
+
+    request.user = {
+      name: 'sample',
+      scope: 'baz'
+    }
+
+    request.jwtAuthz(['foo'])
+      .catch(err => t.match(err.message, 'Insufficient scope') )
+
+    reply.send({ foo: 'bar' })
+  })
+  fastify.listen(0, function (err) {
+    fastify.server.unref()
+    t.error(err)
+    request({
+      method: 'GET',
+      uri: 'http://localhost:' + fastify.server.address().port + '/test5',
+      json: true
+    }, function (err, response) {
+      t.error(err)
+      t.ok(response)
+    })
+  })
+})
+
+test('Happy path', function (t) {
+  t.plan(3)
+  var fastify = Fastify()
+  fastify.register(jwtAuthz)
+
+  fastify.get('/test5', function (request, reply) {
+
+    request.user = {
+      name: 'sample',
+      scope: 'user manager'
+    }
+
+    request.jwtAuthz(['user'])
+
+    reply.send({ foo: 'bar' })
+  })
+  fastify.listen(0, function (err) {
+    fastify.server.unref()
+    t.error(err)
+    request({
+      method: 'GET',
+      uri: 'http://localhost:' + fastify.server.address().port + '/test5',
+      json: true
+    }, function (err, response) {
+      t.error(err)
+      t.ok(response)
+    })
+  })
+})
