@@ -7,28 +7,38 @@
 
 ```js
 const fastify = require('fastify')()
+const jwt = require('fastify-jwt')
 const jwtAuthz = require('fastify-jwt-authz')
 
+fastify.register(jwt, {
+  secret: 'superSecretCode'
+})
 fastify.register(jwtAuthz)
 
 fastify.get('/api', {
   beforeHandler: [
     function(request, reply, done) {
-      // authenticate and bind `user` object to
-      // the request instance
-      // check out the fastify-jwt plugin!
+      request.jwtVerify(done)
+      /* The user's JWT auth token is
+       * connected to the request object 
+       * under `headers.authentication`.
+       * 
+       * The jwtVerify method will verify 
+       * the JWT token with the secret.
+       * 
+       * If it verifies, the user object is 
+       * populated onto the request object 
+       * which is passed to the next function.
+       * */
     }, 
     function(request, reply, done) {
-      request
-        .jwtAuthz(['read:data', 'write:data'])
-        .then(() => {
-          fastify.log.info('valid scope')
-          done()
-        })
-        .catch(err => {
-          fastify.log.error(err)
-          done(err)
-        })
+      request.jwtAuthz(['read:data', 'write:data'], done)
+      /* jwtAuthz will read the verified user's
+       * scope off of the request object. It will 
+       * then compare the scopes defined above to
+       * the user's scopes aquired by the JWT verification
+       * method.
+       * */
     },
   ],
 }, (request, reply) => {
