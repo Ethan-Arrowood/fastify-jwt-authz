@@ -26,9 +26,9 @@ function fastifyJwtAuthz(fastify, opts, next) {
     if (typeof this.user.scope !== 'string') 
       return callback(new Error('request.user.scope must be a string'))
     
-    var scope = this.user.scope.split(' ')
+    var userScopes = this.user.scope.split(' ')
     var allowed = scopes.some(function (scope) {
-      return scopes.indexOf(scope) !== -1
+      return userScopes.indexOf(scope) !== -1
     })
 
     return callback(allowed ? null : new Error('Insufficient scope'))
