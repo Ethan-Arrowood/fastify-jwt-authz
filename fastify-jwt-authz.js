@@ -31,6 +31,6 @@ function fastifyJwtAuthz (fastify, opts, next) {
 }
 
 module.exports = fp(fastifyJwtAuthz, {
-  fastify: '>= 0.39',
+  fastify: '>=1.0.0-rc.1',
   name: 'fastify-jwt-authz'
 })
